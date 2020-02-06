@@ -59,4 +59,4 @@ The explicit form:
 
 For example: `make-pan.sh ../IMG_3418.JPG up 13 60`
 
-This creates a video that pans up a vertical panoramic image, where each frame is 13 pixels from the prior frame, and it runs at 60 frames per second. This is a pretty smooth video and it moves fairly quickly. That image was actually a shot of the Space Needle in Seattle, WA. So the pan video allows us to get full width of the screen and full height of the Space Needle, for a more imperessive shot on a big-screen TV.
+This creates a video that pans up a vertical panoramic image, where each frame is 13 pixels from the prior frame, and it runs at 60 frames per second. This is a pretty smooth video and it moves fairly quickly. That image was actually a shot of the Space Needle in Seattle, WA. So the pan video allows us to get full width of the screen and full height of the Space Needle, for a more impressive shot on a big-screen TV.
