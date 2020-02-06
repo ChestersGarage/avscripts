@@ -19,11 +19,13 @@ increment=${3:-25}
 # Set frame rate to 30 if not specified
 framerate=${4:-30}
 
+# We need to know the file name bits in order to create the output file name.
 pano_file_extension=$(basename ${pano_file_name} | cut -d '.' -f 2)
 output_file="$(basename -s .${pano_file_extension} ${pano_file_name})"
 # Can be any file type compatible with H264 video.
 output_file_extension="mp4"
 
+# Need to know the dimensions of the pano
 pano_geometry=$(magick identify ${pano_file_name} | awk '{ print $3 }')
 pano_width=$(echo ${pano_geometry} | cut -d x -f 1)
 pano_height=$(echo ${pano_geometry} | cut -d x -f 2)
@@ -73,6 +75,7 @@ show_framing_info(){
     echo ""
 }
 
+# Chops up the pano, horizontally, into still frames
 make_h_frames(){
     frame_count=$(( ($pano_width - ($frame_width + $increment)) / $increment ))
     show_framing_info
@@ -94,6 +97,7 @@ make_h_frames(){
     done
 }
 
+# Chops up the pano, vertically, into still frames
 make_v_frames(){
     frame_count=$(( ($pano_height - ($frame_height + $increment)) / $increment ))
     show_framing_info
@@ -115,6 +119,7 @@ make_v_frames(){
     done
 }
 
+# Panning left or up requires simply reversing a right or down frame sequence, respectively.
 reverse_sequence(){
     file_list=$(ls -1 pan*.png | sort --reverse)
     counter=0
@@ -127,14 +132,16 @@ reverse_sequence(){
     done
 }
 
-make_rev_video(){
-    ffmpeg -framerate ${framerate} -i revpan%05d.png \
+# Stack all the frames together into a video clip
+make_video(){
+    ffmpeg -framerate ${framerate} -i pan%05d.png \
     -c:v libx264 -crf 0 -s 1920x1080 ${output_file}.${output_file_extension} \
     -c:v libx264 -crf 25 -s 1280x720 ${output_file}-preview.${output_file_extension}
 }
 
-make_video(){
-    ffmpeg -framerate ${framerate} -i pan%05d.png \
+# Due to file renaming in the sequence reversing process, we use a slightly different video command
+make_rev_video(){
+    ffmpeg -framerate ${framerate} -i revpan%05d.png \
     -c:v libx264 -crf 0 -s 1920x1080 ${output_file}.${output_file_extension} \
     -c:v libx264 -crf 25 -s 1280x720 ${output_file}-preview.${output_file_extension}
 }
