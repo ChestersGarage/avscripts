@@ -5,6 +5,7 @@ A place for the scripts I write for my audio/video projects. These do things to 
 I run these bash scripts in a Cygwin terminal (mintty) on Windows 10, in iTerm2/Homebrew on a Mac, and in Linux, whatever terminal comes with that distro. You need a variety of other command line tools installed for the scripts to work with. They expect all executables to be in your PATH environment variable. So make sure you've set all that up and can run them individually on the command line before trying to run anything from this repo.
 
 ## Extra Tools Required
+These all must be installed and made functional on the command line. Please follow the installation instructions at the web sites for these tools.
 * ImageMagick: https://imagemagick.org/
 * ffmpeg: http://ffmpeg.org/
 * exiftool: https://exiftool.org/
