@@ -9,6 +9,7 @@ These all must be installed and made functional on the command line. Please foll
 * ImageMagick: https://imagemagick.org/
 * ffmpeg: http://ffmpeg.org/
 * exiftool: https://exiftool.org/
+* mkclean: https://www.matroska.org/downloads/mkclean.html
 
 ## Other Notable Binaries Used
 Make sure all these work on your computer.
