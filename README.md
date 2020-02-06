@@ -51,7 +51,7 @@ The simple form:
 
 For example: `make-pan.sh /home/Users/mchester/Desktop/Vacation2019/20190629_131016.jpg`
 
-This creates a video that pans right on a horizontal panoramic image, where each frame is 25 pixels from the prior frame, and it runs at 30 frames per second. This video is reasonably smooth, maybe a little choppy if you want to see much detail, and it moves through a 360-degree pan in the neighborhood of about 20 seconds.
+This creates a video that pans right on a horizontal panoramic image, where each frame is 25 pixels from the prior frame, and it runs at 30 frames per second. This video is reasonably smooth, maybe a little choppy if you want to see much detail, and it moves through a 360-degree pan in the neighborhood of about 25 seconds.
 
 The explicit form:
 
