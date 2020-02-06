@@ -77,7 +77,7 @@ show_framing_info(){
 
 # Chops up the pano, horizontally, into still frames
 make_h_frames(){
-    frame_count=$(( ($pano_width - ($frame_width + $increment)) / $increment ))
+    frame_count=$(( ($pano_width - $frame_width) / $increment ))
     show_framing_info
     frame=0
     frame_position=0
@@ -99,7 +99,7 @@ make_h_frames(){
 
 # Chops up the pano, vertically, into still frames
 make_v_frames(){
-    frame_count=$(( ($pano_height - ($frame_height + $increment)) / $increment ))
+    frame_count=$(( ($pano_height - $frame_height) / $increment ))
     show_framing_info
     frame=0
     frame_position=0
