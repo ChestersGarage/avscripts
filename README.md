@@ -9,7 +9,7 @@ I run these bash scripts in a Cygwin terminal (mintty) on Windows 10, in iTerm2/
 * ffmpeg: http://ffmpeg.org/
 * exiftool: https://exiftool.org/
 
-## Other notable binaries used
+## Other Notable Binaries Used
 Make sure all these work on your computer.
 * basename
 * cut
