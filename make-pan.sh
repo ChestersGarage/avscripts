@@ -83,7 +83,7 @@ make_frames(){
 
     echo "Panorama size: $pano_width x $pano_height"
     echo "Raw frame size: $frame_width x $frame_height (will be scaled to 1920 x 1080)"
-    echo "Video length: $frame_count frames, and approximately $(( $frame_count / $framerate )).$(( ($frame_count % $framerate) * 100 / $framerate )) second(s)."
+    echo "Approximate video length: $(( $frame_count / $framerate )).$(( ($frame_count % $framerate) * 100 / $framerate )) second(s); $frame_count frames."
     echo ""
 
     while [[ $frame -le $frame_count ]]
