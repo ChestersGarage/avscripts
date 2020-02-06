@@ -40,12 +40,13 @@ The video created will run at 30 fps by default. You can set the framerate on th
 
 The script outputs both a 720p x264 low-quality preview and a 1080p x264 lossless main video at the same time. In the case when your main video is too bulky to watch directly (very common!), you can watch the preview video to verify the results of the conversion.  Then use the main video in your editing project.
 
-All the still frame image files are left behind so you can look at them. But you can delete them once you have a video clip you like. Be sure to delete them before running the script subsequent times, or you may end up with errant frames in your video.
+All the still frame image files are left behind so you can look at them. But you should delete them once you have a video clip you like. Be sure to delete them before running the script subsequent times, or you may end up with errant frames in your video.
 
 ### Running
-Prep your source panoramic images before running the script.  Do things like cropping, color and levels adjustments, etc., so that your pan video will be as clean as possible on the output.
+Prep your source panoramic images before running the script. Do things like cropping, color and levels adjustments, etc., so that your pan video will be as clean as possible on the output.
 
 The simple form:
+
 ```make-pan.sh <filename>```
 
 For example: `make-pan.sh /home/Users/mchester/Desktop/Vacation2019/20190629_131016.jpg`
@@ -53,6 +54,7 @@ For example: `make-pan.sh /home/Users/mchester/Desktop/Vacation2019/20190629_131
 This creates a video that pans right on a horizontal panoramic image, where each frame is 25 pixels from the prior frame, and it runs at 30 frames per second. This video is reasonably smooth, maybe a little choppy if you want to see much detail, and it moves through a 360-degree pan in the neighborhood of about 20 seconds.
 
 The explicit form:
+
 ```make-pan.sh <source_file> <direction> <increment> <framerate>```
 
 For example: `make-pan.sh ../IMG_3418.JPG up 13 60`
