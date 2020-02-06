@@ -18,6 +18,10 @@ pan_direction=${2:-right}
 increment=${3:-25}
 # Set frame rate to 30 if not specified
 framerate=${4:-30}
+# Set the first frame to bigger than zero
+first_frame=${5:-0}
+# Set the last frame position, i.e.: "max_frame_position - last_frame"
+last_frame=${6:-0}
 
 # We need to know the file name bits in order to create the output file name.
 pano_file_extension=$(basename ${pano_file_name} | cut -d '.' -f 2)
@@ -57,61 +61,45 @@ verify_tall(){
 }
 
 # When panning horizontally, assume frame height is the same as the pano
-h_frame_size(){
+set_h_framing(){
     frame_height=$pano_height
     frame_width=$(( ($pano_height / $aspect_height) * $aspect_width ))
+    frame_count=$(( (($pano_width - $frame_width) / $increment) - $first_frame - $last_frame ))
+    make_frames
 }
 
 # When panning vertically, assume frame width is the same as the pano
-v_frame_size(){
+set_v_framing(){
     frame_width=$pano_width
     frame_height=$(( ($pano_width / $aspect_width) * $aspect_height ))
+    frame_count=$(( (($pano_height - $frame_height) / $increment) - $first_frame - $last_frame ))
+    make_frames
 }
 
-show_framing_info(){
+# Chops up the pano into still frames
+make_frames(){
+    frame=$(( $first_frame ))
+    frame_position=$(( $frame * $increment ))
+
     echo "Panorama size: $pano_width x $pano_height"
-    echo "Frame Size: $frame_width x $frame_height"
-    echo "Number of frames: $frame_count"
+    echo "Raw frame size: $frame_width x $frame_height (will be scaled to 1920 x 1080)"
+    echo "Video length: $frame_count frames, and approximately $(( $frame_count / $framerate )).$(( ($frame_count % $framerate) * 100 / $framerate )) second(s)."
     echo ""
-}
 
-# Chops up the pano, horizontally, into still frames
-make_h_frames(){
-    frame_count=$(( ($pano_width - $frame_width) / $increment ))
-    show_framing_info
-    frame=0
-    frame_position=0
-    max_frame_position=$(( $frame_count * $increment ))
-    while [[ $frame_position -le $max_frame_position ]]
+    while [[ $frame -le $frame_count ]]
     do
         # Set the offset along the pano
         frame_position=$(($frame * $increment))
         # Pad the sequence numbers at 5 digits for better file naming
         printf -v padded_frame "%05d" $frame
+        if [[ "$mode" == "horizontal" ]]
+        then
+            frame_data="${frame_width}x${frame_height}+${frame_position}+0"
+        else
+            frame_data="${frame_width}x${frame_height}+0+${frame_position}"
+        fi
         # Run it!
-        magick ${pano_file_name} -crop ${frame_width}x${frame_height}+${frame_position}+0 -resize 1920x1080 pan${padded_frame}.png
-        echo "Frame number: ${padded_frame}"
-        echo ""
-        # And count
-        frame=$(($frame + 1))
-    done
-}
-
-# Chops up the pano, vertically, into still frames
-make_v_frames(){
-    frame_count=$(( ($pano_height - $frame_height) / $increment ))
-    show_framing_info
-    frame=0
-    frame_position=0
-    max_frame_position=$(( $frame_count * $increment ))
-    while [[ $frame_position -le $max_frame_position ]]
-    do
-        # Set the offset along the pano
-        frame_position=$(($frame * $increment))
-        # Pad the sequence numbers at 5 digits for better file naming
-        printf -v padded_frame "%05d" $frame
-        # Run it!
-        magick ${pano_file_name} -crop ${frame_width}x${frame_height}+0+${frame_position} -resize 1920x1080 pan${padded_frame}.png
+        magick ${pano_file_name} -crop ${frame_data} -resize 1920x1080 pan${padded_frame}.png
         echo "Frame number: ${padded_frame}"
         echo ""
         # And count
@@ -134,14 +122,13 @@ reverse_sequence(){
 
 # Stack all the frames together into a video clip
 make_video(){
-    ffmpeg -framerate ${framerate} -i pan%05d.png \
-    -c:v libx265 -crf 0 -s 1920x1080 ${output_file}.${output_file_extension} \
-    -c:v libx265 -crf 30 -s 1280x720 ${output_file}-preview.${output_file_extension}
-}
-
-# Due to file renaming in the sequence reversing process, we use a slightly different video command
-make_rev_video(){
-    ffmpeg -framerate ${framerate} -i revpan%05d.png \
+    if [[ $direction == reversed ]]
+    then
+        input_file_pattern="revpan%05d.png"
+    else
+        input_file_pattern="pan%05d.png"
+    fi
+    ffmpeg -framerate ${framerate} -i ${input_file_pattern} \
     -c:v libx265 -crf 0 -s 1920x1080 ${output_file}.${output_file_extension} \
     -c:v libx265 -crf 30 -s 1280x720 ${output_file}-preview.${output_file_extension}
 }
@@ -158,33 +145,39 @@ clean_mkv(){
 # K, now do it!
 case ${pan_direction} in
 right)
+    mode="horizontal"
     verify_wide
-    h_frame_size
-    make_h_frames
+    set_h_framing
+    make_frames
     make_video
     clean_mkv
     ;;
 left)
+    mode="horizontal"
+    direction="reversed"
     verify_wide
-    h_frame_size
-    make_h_frames
+    set_h_framing
+    make_frames
     reverse_sequence
-    make_rev_video
+    make_video
     clean_mkv
     ;;
 down)
+    mode="vertical"
     verify_tall
-    v_frame_size
-    make_v_frames
+    set_v_framing
+    make_frames
     make_video
     clean_mkv
     ;;
 up)
+    mode="vertical"
+    direction="reversed"
     verify_tall
-    v_frame_size
-    make_v_frames
+    set_v_framing
+    make_frames
     reverse_sequence
-    make_rev_video
+    make_video
     clean_mkv
     ;;
 esac
