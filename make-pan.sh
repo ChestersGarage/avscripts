@@ -23,7 +23,7 @@ framerate=${4:-30}
 pano_file_extension=$(basename ${pano_file_name} | cut -d '.' -f 2)
 output_file="$(basename -s .${pano_file_extension} ${pano_file_name})"
 # Can be any file type compatible with H264 video.
-output_file_extension="mp4"
+output_file_extension="mkv"
 
 # Need to know the dimensions of the pano
 pano_geometry=$(magick identify ${pano_file_name} | awk '{ print $3 }')
@@ -135,15 +135,23 @@ reverse_sequence(){
 # Stack all the frames together into a video clip
 make_video(){
     ffmpeg -framerate ${framerate} -i pan%05d.png \
-    -c:v libx264 -pix_fmt yuv420p -crf 0 -s 1920x1080 ${output_file}.${output_file_extension} \
-    -c:v libx264 -pix_fmt yuv420p -crf 25 -s 1280x720 ${output_file}-preview.${output_file_extension}
+    -c:v libx265 -crf 0 -s 1920x1080 ${output_file}.${output_file_extension} \
+    -c:v libx265 -crf 30 -s 1280x720 ${output_file}-preview.${output_file_extension}
 }
 
 # Due to file renaming in the sequence reversing process, we use a slightly different video command
 make_rev_video(){
     ffmpeg -framerate ${framerate} -i revpan%05d.png \
-    -c:v libx264 -pix_fmt yuv420p -crf 0 -s 1920x1080 ${output_file}.${output_file_extension} \
-    -c:v libx264 -pix_fmt yuv420p -crf 25 -s 1280x720 ${output_file}-preview.${output_file_extension}
+    -c:v libx265 -crf 0 -s 1920x1080 ${output_file}.${output_file_extension} \
+    -c:v libx265 -crf 30 -s 1280x720 ${output_file}-preview.${output_file_extension}
+}
+
+clean_mkv(){
+    if [[ ${output_file_extension} == mkv ]]
+    then
+        mv ${output_file}.${output_file_extension} ${output_file}-dirty.${output_file_extension}
+        mkclean --remux ${output_file}-dirty.${output_file_extension} ${output_file}.${output_file_extension}
+    fi
 }
 
 # K, now do it!
@@ -153,6 +161,7 @@ right)
     h_frame_size
     make_h_frames
     make_video
+    clean_mkv
     ;;
 left)
     verify_wide
@@ -160,12 +169,14 @@ left)
     make_h_frames
     reverse_sequence
     make_rev_video
+    clean_mkv
     ;;
 down)
     verify_tall
     v_frame_size
     make_v_frames
     make_video
+    clean_mkv
     ;;
 up)
     verify_tall
@@ -173,5 +184,6 @@ up)
     make_v_frames
     reverse_sequence
     make_rev_video
+    clean_mkv
     ;;
 esac
