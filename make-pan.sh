@@ -151,6 +151,7 @@ clean_mkv(){
     then
         mv ${output_file}.${output_file_extension} ${output_file}-dirty.${output_file_extension}
         mkclean --remux ${output_file}-dirty.${output_file_extension} ${output_file}.${output_file_extension}
+        rm -f ${output_file}-dirty.${output_file_extension}
     fi
 }
 
