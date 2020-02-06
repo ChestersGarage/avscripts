@@ -135,15 +135,15 @@ reverse_sequence(){
 # Stack all the frames together into a video clip
 make_video(){
     ffmpeg -framerate ${framerate} -i pan%05d.png \
-    -c:v libx264 -crf 0 -s 1920x1080 ${output_file}.${output_file_extension} \
-    -c:v libx264 -crf 25 -s 1280x720 ${output_file}-preview.${output_file_extension}
+    -c:v libx264 -pix_fmt yuv420p -crf 0 -s 1920x1080 ${output_file}.${output_file_extension} \
+    -c:v libx264 -pix_fmt yuv420p -crf 25 -s 1280x720 ${output_file}-preview.${output_file_extension}
 }
 
 # Due to file renaming in the sequence reversing process, we use a slightly different video command
 make_rev_video(){
     ffmpeg -framerate ${framerate} -i revpan%05d.png \
-    -c:v libx264 -crf 0 -s 1920x1080 ${output_file}.${output_file_extension} \
-    -c:v libx264 -crf 25 -s 1280x720 ${output_file}-preview.${output_file_extension}
+    -c:v libx264 -pix_fmt yuv420p -crf 0 -s 1920x1080 ${output_file}.${output_file_extension} \
+    -c:v libx264 -pix_fmt yuv420p -crf 25 -s 1280x720 ${output_file}-preview.${output_file_extension}
 }
 
 # K, now do it!
