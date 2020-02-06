@@ -42,8 +42,17 @@ The script outputs both a 720p x264 low-quality preview and a 1080p x264 lossles
 All the still frame image files are left behind so you can look at them. But you can delete them once you have a video clip you like. Be sure to delete them before running the script subsequent times, or you may end up with errant frames in your video.
 
 ### Running
+Prep your source panoramic images before running the script.  Do things like cropping, color and levels adjustments, etc., so that your pan video will be as clean as possible on the output.
+
 ```make-pan.sh <source_file> <direction> <increment> <framerate>```
 
 For example: `make-pan.sh ../IMG_3418.JPG up 13 60`
 
 This creates a video that pans up a vertical panoramic image, where each frame is 13 pixels from the prior frame, and it runs at 60 frames per second. This is a pretty smooth video and it moves fairly quickly. That image was actually a shot of the Space Needle in Seattle, WA. So the pan video allows us to get full width of the TV and full height of the Space Needle, for a more imperessive shot.
+
+The simplest form of the command
+```make-pan.sh <filename>```
+
+For example: `make-pan.sh ../20190629_131016.jpg`
+
+The creates a video that pans right on a typical horizontal panoramic image, where each frame is 25 pixels from the prior frame, and it runs at 30 frames per second. This video is reasonably smooth, maybe a little choppy if you want to see much detail, and it moves through a 360-degree pan in about 22 seconds.
