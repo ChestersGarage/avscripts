@@ -122,13 +122,13 @@ reverse_sequence(){
     do
       # Pad the counter to 5 digits "%05d"
       printf -v padded_counter "%05d" ${counter}
-      mv -f $file lupan${padded_counter}.png
+      mv -f $file revpan${padded_counter}.png
       counter=$((${counter} + 1))
     done
 }
 
-make_lu_video(){
-    ffmpeg -framerate ${framerate} -i lupan%05d.png \
+make_rev_video(){
+    ffmpeg -framerate ${framerate} -i revpan%05d.png \
     -c:v libx264 -crf 0 -s 1920x1080 ${output_file}.${output_file_extension} \
     -c:v libx264 -crf 25 -s 1280x720 ${output_file}-preview.${output_file_extension}
 }
@@ -152,7 +152,7 @@ left)
     h_frame_size
     make_h_frames
     reverse_sequence
-    make_lu_video
+    make_rev_video
     ;;
 down)
     verify_tall
@@ -165,6 +165,6 @@ up)
     v_frame_size
     make_v_frames
     reverse_sequence
-    make_lu_video
+    make_rev_video
     ;;
 esac
