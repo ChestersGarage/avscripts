@@ -19,9 +19,9 @@ Make sure all these work on your computer.
 * printf
 
 ## Installation
-* Put this repo somewhere convenient.
-* Add it to your PATH environment variable.
-* Run in the folder you want the OUTPUT to be placed.
+* Clone this repo to a folder in a convenient location on your computer.
+* Add the path to this folder to your PATH environment variable.
+* Run the scripts in a clean folder where you want the output files to be placed.
 
 I recommend always running these scripts inside an empty folder, and reference your source files with the full path to where they are. The scripts will write their temp and output files to the current working folder. You risk damaging your source files if you run these scripts within the folders where your source files are stored.
 
@@ -45,12 +45,12 @@ All the still frame image files are left behind so you can look at them. But you
 ### Running
 Prep your source panoramic images before running the script.  Do things like cropping, color and levels adjustments, etc., so that your pan video will be as clean as possible on the output.
 
-The simplest form:
+The simple form:
 ```make-pan.sh <filename>```
 
-For example: `make-pan.sh ../20190629_131016.jpg`
+For example: `make-pan.sh /home/Users/mchester/Desktop/Vacation2019/20190629_131016.jpg`
 
-The creates a video that pans right on a horizontal panoramic image, where each frame is 25 pixels from the prior frame, and it runs at 30 frames per second. This video is reasonably smooth, maybe a little choppy if you want to see much detail, and it moves through a 360-degree pan in the neighborhood of about 20 seconds.
+This creates a video that pans right on a horizontal panoramic image, where each frame is 25 pixels from the prior frame, and it runs at 30 frames per second. This video is reasonably smooth, maybe a little choppy if you want to see much detail, and it moves through a 360-degree pan in the neighborhood of about 20 seconds.
 
 The explicit form:
 ```make-pan.sh <source_file> <direction> <increment> <framerate>```
