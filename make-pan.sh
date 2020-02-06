@@ -20,7 +20,9 @@ increment=${3:-25}
 framerate=${4:-30}
 
 pano_file_extension=$(basename ${pano_file_name} | cut -d '.' -f 2)
-output_file="$(basename -s .${pano_file_extension} ${pano_file_name}).mp4"
+output_file="$(basename -s .${pano_file_extension} ${pano_file_name})"
+# Can be any file type compatible with H264 video.
+output_file_extension="mp4"
 
 pano_geometry=$(magick identify ${pano_file_name} | awk '{ print $3 }')
 pano_width=$(echo ${pano_geometry} | cut -d x -f 1)
@@ -127,14 +129,14 @@ reverse_sequence(){
 
 make_lu_video(){
     ffmpeg -framerate ${framerate} -i lupan%05d.png \
-    -c:v libx264 -crf 0 -s 1920x1080 ${output_file} \
-    -c:v libx264 -crf 25 -s 1280x720 preview-${output_file}
+    -c:v libx264 -crf 0 -s 1920x1080 ${output_file}.${output_file_extension} \
+    -c:v libx264 -crf 25 -s 1280x720 ${output_file}-preview.${output_file_extension}
 }
 
 make_video(){
     ffmpeg -framerate ${framerate} -i pan%05d.png \
-    -c:v libx264 -crf 0 -s 1920x1080 ${output_file} \
-    -c:v libx264 -crf 25 -s 1280x720 preview-${output_file}
+    -c:v libx264 -crf 0 -s 1920x1080 ${output_file}.${output_file_extension} \
+    -c:v libx264 -crf 25 -s 1280x720 ${output_file}-preview.${output_file_extension}
 }
 
 # K, now do it!
