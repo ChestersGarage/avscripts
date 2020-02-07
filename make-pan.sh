@@ -138,7 +138,7 @@ reverse_sequence(){
 # we must resequence them to start at zero.
 # Otherwise ffmpeg will fail.
 resequence(){
-    echo "Resequencing the frames to start at 0."
+    echo "Resequencing the frames to start at zero."
     file_list=$(ls -1 pan*.png | sort)
     counter=0
     for file in ${file_list}
@@ -170,7 +170,7 @@ clean_mkv(){
     then
         echo "Cleaning the mkv file."
         mv ${output_file}.${output_file_extension} ${output_file}-dirty.${output_file_extension}
-        mkclean --remux ${output_file}-dirty.${output_file_extension} ${output_file}.${output_file_extension}  2>> make-pan-error.log
+        mkclean --remux ${output_file}-dirty.${output_file_extension} ${output_file}.${output_file_extension} 2>> make-pan-error.log
         rm -f ${output_file}-dirty.${output_file_extension}
     fi
 }
@@ -218,3 +218,5 @@ up)
     clean_mkv
     ;;
 esac
+
+exit 0
