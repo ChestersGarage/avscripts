@@ -77,6 +77,10 @@ set_v_framing(){
     frame_all=$(( ($pano_height - $frame_height) / $increment ))
 }
 
+init_magick_command(){
+    magick_command="magick ${pano_file_name} -write mpr:pano +delete"
+}
+
 # Chop up the pano into still frames
 make_frames(){
     frame=$(( $cut_from_start ))
@@ -91,6 +95,8 @@ make_frames(){
     echo "Starting at frame $cut_from_start; ending at frame $frame_last."
     echo ""
 
+    init_magick_command
+    echo -en "\rFrame: 0"
     while [[ $frame -le $frame_last ]]
     do
         # Set the offset along the pano
@@ -104,12 +110,20 @@ make_frames(){
             frame_data="${frame_width}x${frame_height}+0+${frame_position}"
         fi
         # Run it!
-        magick ${pano_file_name} -crop ${frame_data} -resize 1920x1080 pan${padded_frame}.png 2>> make-pan-error.log
-        echo -en "\rFrame: ${padded_frame}"
+        #magick ${pano_file_name} -crop ${frame_data} -resize 1920x1080 pan${padded_frame}.png 2>> make-pan-error.log
+        magick_command="${magick_command} ( mpr:pano -auto-orient -crop ${frame_data} -resize 1920x1080 -write pan${padded_frame}.png )"
+        # Each time we rack up 25, we run the command, in order to prevent command length overrun
+        if [[ $frame -gt 0 ]] && [[ $(( $frame % 25 )) -eq 0 ]]
+        then
+            ${magick_command} 2>> make-pan-error.log
+            echo -en "\rFrame: ${padded_frame}"
+            init_magick_command
+        fi
         # And count
         frame=$(($frame + 1))
     done
-    echo ""
+    ${magick_command} 2>> make-pan-error.log
+    echo -e "\rFrame: ${padded_frame}"
 }
 
 # Panning left or up requires swapping the start and end cut points
