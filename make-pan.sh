@@ -104,11 +104,18 @@ make_frames(){
         fi
         # Run it!
         magick ${pano_file_name} -crop ${frame_data} -resize 1920x1080 pan${padded_frame}.png 2>> make-pan-error.log
-        echo -en "Frame number: ${padded_frame}\r"
+        echo -en "\rFrame number: ${padded_frame}"
         # And count
         frame=$(($frame + 1))
     done
     echo ""
+}
+
+# Panning left or up requires swapping the start and end cut points
+swap_cut_points(){
+    cut_from_start_temp=$cut_from_end
+    cut_from_end=$cut_from_start
+    cut_from_start=$cut_from_start_temp
 }
 
 # Panning left or up requires simply reversing a right or down frame sequence.
@@ -118,10 +125,23 @@ reverse_sequence(){
     counter=0
     for file in ${file_list}
     do
-      # Pad the counter to 5 digits "%05d"
-      printf -v padded_counter "%05d" ${counter}
-      mv -f $file revpan${padded_counter}.png
-      counter=$((${counter} + 1))
+        # Pad the counter to 5 digits "%05d"
+        printf -v padded_counter "%05d" ${counter}
+        mv -f $file revpan${padded_counter}.png
+        counter=$((${counter} + 1))
+    done
+}
+
+resequence(){
+    echo "Resequencing the frames to start at 0."
+    file_list=$(ls -1 pan*.png | sort)
+    counter=0
+    for file in ${file_list}
+    do
+        # Pad the counter to 5 digits "%05d"
+        printf -v padded_counter "%05d" ${counter}
+        mv -f $file fwdpan${padded_counter}.png
+        counter=$((${counter} + 1))
     done
 }
 
@@ -132,7 +152,7 @@ make_video(){
     then
         input_file_pattern="revpan%05d.png"
     else
-        input_file_pattern="pan%05d.png"
+        input_file_pattern="fwdpan%05d.png"
     fi
     ffmpeg -framerate ${framerate} -i ${input_file_pattern} \
     -c:v libx265 -crf 0 -s 1920x1080 ${output_file}.${output_file_extension} \
@@ -157,12 +177,14 @@ right)
     verify_wide
     set_h_framing
     make_frames
+    resequence
     make_video
     clean_mkv
     ;;
 left)
     mode="horizontal"
     direction="reversed"
+    swap_cut_points
     verify_wide
     set_h_framing
     make_frames
@@ -175,12 +197,14 @@ down)
     verify_tall
     set_v_framing
     make_frames
+    resequence
     make_video
     clean_mkv
     ;;
 up)
     mode="vertical"
     direction="reversed"
+    swap_cut_points
     verify_tall
     set_v_framing
     make_frames
