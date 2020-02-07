@@ -1,5 +1,5 @@
 # A/V Scripts
-A place for the scripts I write for my audio/video projects. These do things to images and video clips. 
+A place for the scripts I write for my audio/video projects. These do things to images and video clips.
 
 # General Usage
 I run these bash scripts in a Cygwin terminal (mintty) on Windows 10, in iTerm2/Homebrew on a Mac, and in Linux, whatever terminal comes with that distro. You need a variety of other command line tools installed for the scripts to work with. They expect all executables to be in your PATH environment variable. So make sure you've set all that up and can run them individually on the command line before trying to run anything from this repo.
@@ -56,8 +56,19 @@ This creates a video that pans right on a horizontal panoramic image, where each
 
 The explicit form:
 
-```make-pan.sh <source_file> <direction> <increment> <framerate>```
+```make-pan.sh <source_file> <direction> <increment> <framerate> <cut_from_start> <cut_from_end>```
 
-For example: `make-pan.sh ../IMG_3418.JPG up 13 60`
+    Where:
+    * direction is one of right, left, up, down (default right)
+    * increment is how many pixels of shift between frames. (default 25) Any more than about 33 and it's pretty jittery.
+    * framerate is how many frames per second the resulting video will be. (default 30)
+    * cut_from_start is how many frames you want to cut off at the beginning of the video. (default 0)
+    * cut_from_end is how many frames you want to cut off at the end of the video. (default 0)
 
-This creates a video that pans up a vertical panoramic image, where each frame is 13 pixels from the prior frame, and it runs at 60 frames per second. This is a pretty smooth video and it moves fairly quickly. That image was actually a shot of the Space Needle in Seattle, WA. So the pan video allows us to get full width of the screen and full height of the Space Needle, for a more impressive shot on a big-screen TV.
+For example: `make-pan.sh ../IMG_3418.JPG up 13 60 5 75`
+
+This creates a video that pans up a vertical panoramic image, where each frame is 13 pixels from the prior frame, and it runs at 60 frames per second. We cut off 5 frames at the beginning, because there was too much sidewalk in the pano.  And we chopped off 75 frames of empty sky at the top of the pano. This is a pretty smooth video and it moves fairly quickly. That image was actually a shot of the Space Needle in Seattle, WA. So the pan video allows us to get full width of the screen and full height of the Space Needle, for a more impressive shot on a big-screen TV.
+
+How did we know we wanted to chop off those frames?  By running a simple form command and looking at the preview.  Then just clean up files and run it again with all the parameters you want. Repeat until happy.
+
+

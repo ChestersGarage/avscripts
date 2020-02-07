@@ -82,14 +82,15 @@ make_frames(){
     frame=$(( $cut_from_start ))
     frame_position=$(( $frame * $increment ))
     frame_count=$(( $frame_all - $cut_from_start - $cut_from_end ))
-    last_frame=$(( $cut_from_start + $frame_count ))
+    frame_last=$(( $cut_from_start + $frame_count ))
 
     echo "Panorama size: $pano_width x $pano_height; $frame_all total possible frames."
     echo "Raw frame size: $frame_width x $frame_height (will be scaled to 1920 x 1080)"
     echo "Approximate video length: $(( $frame_count / $framerate )).$(( ($frame_count % $framerate) * 100 / $framerate )) second(s); $frame_count frames."
+    echo "Starting at frame $cut_from_start; ending at frame $frame_last."
     echo ""
 
-    while [[ $frame -le $last_frame ]]
+    while [[ $frame -le $frame_last ]]
     do
         # Set the offset along the pano
         frame_position=$(($frame * $increment))
@@ -112,6 +113,7 @@ make_frames(){
 
 # Panning left or up requires simply reversing a right or down frame sequence.
 reverse_sequence(){
+    echo "Reversing the frame sequence."
     file_list=$(ls -1 pan*.png | sort --reverse)
     counter=0
     for file in ${file_list}
@@ -125,6 +127,7 @@ reverse_sequence(){
 
 # Stack all the frames together into a video clip
 make_video(){
+    echo "Assembling frames into a video."
     if [[ $direction == reversed ]]
     then
         input_file_pattern="revpan%05d.png"
@@ -140,6 +143,7 @@ make_video(){
 clean_mkv(){
     if [[ ${output_file_extension} == mkv ]]
     then
+        echo "Cleaning the mkv file."
         mv ${output_file}.${output_file_extension} ${output_file}-dirty.${output_file_extension}
         mkclean --remux ${output_file}-dirty.${output_file_extension} ${output_file}.${output_file_extension}  2>> make-pan-error.log
         rm -f ${output_file}-dirty.${output_file_extension}
