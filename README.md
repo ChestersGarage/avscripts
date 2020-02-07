@@ -60,7 +60,7 @@ The explicit form:
 
     Where:
     * direction is one of right, left, up, down (default right)
-    * increment is how many pixels of shift between frames. (default 25) Any more than about 33 and it's pretty jittery.
+    * increment is how many pixels of shift between frames. (default 25) More than about 33 is pretty jittery.
     * framerate is how many frames per second the resulting video will be. (default 30)
     * cut_from_start is how many frames you want to cut off at the beginning of the video. (default 0)
     * cut_from_end is how many frames you want to cut off at the end of the video. (default 0)
