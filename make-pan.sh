@@ -105,7 +105,7 @@ make_frames(){
         fi
         # Run it!
         magick ${pano_file_name} -crop ${frame_data} -resize 1920x1080 pan${padded_frame}.png 2>> make-pan-error.log
-        echo -en "\rFrame number: ${padded_frame}"
+        echo -en "\rFrame: ${padded_frame}"
         # And count
         frame=$(($frame + 1))
     done
@@ -133,6 +133,10 @@ reverse_sequence(){
     done
 }
 
+# Since cutting off the beginning results in a frame sequence
+# that starts at a number other than zero,
+# we must resequence them to start at zero.
+# Otherwise ffmpeg will fail.
 resequence(){
     echo "Resequencing the frames to start at 0."
     file_list=$(ls -1 pan*.png | sort)
