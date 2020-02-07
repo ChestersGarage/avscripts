@@ -84,6 +84,7 @@ make_frames(){
     frame_count=$(( $frame_all - $cut_from_start - $cut_from_end ))
     frame_last=$(( $cut_from_start + $frame_count ))
 
+    echo ""
     echo "Panorama size: $pano_width x $pano_height; $frame_all total possible frames."
     echo "Raw frame size: $frame_width x $frame_height (will be scaled to 1920 x 1080)"
     echo "Approximate video length: $(( $frame_count / $framerate )).$(( ($frame_count % $framerate) * 100 / $framerate )) second(s); $frame_count frames."
