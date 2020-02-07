@@ -69,4 +69,4 @@ For example: `make-pan.sh ../IMG_3418.JPG up 13 60 5 75`
 
 This creates a video that pans up a vertical panoramic image, where each frame is 13 pixels from the prior frame, and it runs at 60 frames per second. We cut off 5 frames at the beginning, because there was too much sidewalk in the pano.  And we chopped off 75 frames of empty sky at the top of the pano. This is a pretty smooth video and it moves fairly quickly. That image was actually a shot of the Space Needle in Seattle, WA. So the pan video allows us to get full width of the screen and full height of the Space Needle, for a more impressive shot on a big-screen TV.
 
-When specifying args, all but the file name are optional, but their positions are not.  If you specify an arg for <increment>, you must specify <direction> before it. If you want to specify <cut_from_end>, you must specify all args in teh correct order.
+When specifying args, all but the file name are optional, but their positions are not.  If you specify an arg for `<increment>`, you must specify `<direction>` before it. If you want to specify `<cut_from_end>`, you must specify all args in the correct order.
