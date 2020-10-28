@@ -79,12 +79,13 @@ done
 
 ### Convert image sequence to video
 ```
-# ffmpeg: (creates CRF 0 x264 .mkv file) FULLY TESTED
+# ffmpeg: (creates CRF 15 x264/x265 .mkv file)
 # -framerate - the frame rate of the INPUT media
 # -r - the frame rate of the OUTPUT media
 # input-csp=i422 and format=yuvj422p work together to maintain color space quality from JPGs
 # Source images are 4000x3000. Crop to 4000x2250 for 16:9
 
+# GoPro time lapse image sequence
 # JPG image sequence (YUV 4:2:2)
 ffmpeg \
 -start_number 22527 \
@@ -95,6 +96,7 @@ ffmpeg \
 -filter:v 'crop=4000:2250:0:0,scale=1920:-1,format=yuvj422p' \
 PoolParty.mkv
 
+# Chopped up panorama image
 # PNG image sequence (RGB)
 ffmpeg \
 -start_number 00000 \
@@ -104,10 +106,6 @@ ffmpeg \
 -r 60 \
 BuildingPan.mkv
 ```
-
-### 
-
-
 
 # Scripts
 ## make-pan.sh
