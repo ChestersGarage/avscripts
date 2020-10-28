@@ -52,23 +52,24 @@ So when you vacation outside of your home timezone, those pictures and videos wi
 * Copy Media Created (CreateDate or MediaCreateDate) to File Modified stamp in a directory
 	* exiftool '-FileModifyDate<MediaCreateDate' dir
 * Copy File Modified from one file to another
- ```SRCEXT="JPG"
-    DSTEXT="png"
-    for file in $(ls -1 *.${DSTEXT})
-    do
-    SRCFILE=$(basename -s .${DSTEXT} ${file}).${SRCEXT}
-    FMTIME="$(exiftool -args -FileModifyDate ${SRCFILE})"
-    exiftool "$FMTIME" $file
-    done
+```
+SRCEXT="JPG"
+DSTEXT="png"
+for file in $(ls -1 *.${DSTEXT})
+do
+SRCFILE=$(basename -s .${DSTEXT} ${file}).${SRCEXT}
+FMTIME="$(exiftool -args -FileModifyDate ${SRCFILE})"
+exiftool "$FMTIME" $file
+done
 ```
 * Copy tags from originals to edited files
-```for file in $(ls -1 GX*-1080p.MP4)
+```
+for file in $(ls -1 GX*-1080p.MP4)
 	do
 	SRCFILE=$(basename -s '-1080p.MP4' $file).MP4
 	exiftool -tagsFromFile $SRCFILE $file
 done
 ```
-
 
 # Scripts
 ## make-pan.sh
