@@ -77,14 +77,17 @@ When specifying args, all but the file name are optional, but their positions ar
 
 **When sorting files by the generic "Date" column in Windows Explorer**
 * JPG files based on Date Taken column
+
 ** Pulled from the EXIF tag DateTimeOriginal
 ** **localtime without TZ offset**
+
 * PNG based on Date Modified column
 ** Pulled from the file's FileModifyDate data
 ** **localtime with TZ offset**
+
 * Videos based on "Media Created" column
 ** Pulled from either of the QuickTime tags CreateDate or MediaCreateDate
-* **UTC**
+** **UTC**
 
 So when you vacation outside of your home timezone, those pictures and videos will not sort correctly in Windows, until you set your computer clock's timezone to the same as where you went on vacation.
 
