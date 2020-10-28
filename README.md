@@ -1,4 +1,4 @@
-# A/V Scripts
+# A/V Scripts (and Commands)
 A place for the scripts I write for my audio/video projects. These do things to images and video clips.
 
 # General Usage
@@ -26,6 +26,42 @@ Make sure all these work on your computer.
 
 I recommend always running these scripts inside an empty folder, and reference your source files with the full path to where they are. The scripts will write their temp and output files to the current working folder. You risk damaging your source files if you run these scripts within the folders where your source files are stored.
 
+# Commands
+
+## Photos and Home Videos
+
+### Date/Time Stamps
+
+**When sorting files by the generic "Date" column in Windows Explorer**
+* JPG files based on Date Taken column
+    - Pulled from the EXIF tag DateTimeOriginal
+    - **localtime without TZ offset**
+* PNG based on Date Modified column
+    - Pulled from the file's FileModifyDate data
+    - **localtime with TZ offset**
+* Videos based on "Media Created" column
+    - Pulled from either of the QuickTime tags CreateDate or MediaCreateDate
+    - **UTC**
+
+So when you vacation outside of your home timezone, those pictures and videos will not sort correctly in Windows, until you set your computer clock's timezone to the same as where you went on vacation.
+
+* Shift a video's time stamp to 3 hours earlier
+	* exiftool '-QuickTime:MediaCreateDate-=3' '-QuickTime:CreateDate-=3' file.mp4
+* Copy Date Taken (DateTimeOriginal) to File Modified stamp in a directory
+	* exiftool '-FileModifyDate<DateTimeOriginal' dir
+* Copy Media Created (CreateDate or MediaCreateDate) to File Modified stamp in a directory
+	* exiftool '-FileModifyDate<MediaCreateDate' dir
+* Copy File Modified from one file to another
+ ```
+    SRCEXT="JPG"
+    DSTEXT="png"
+    for file in $(ls -1 *.${DSTEXT})
+    do
+    SRCFILE=$(basename -s .${DSTEXT} ${file}).${SRCEXT}
+    FMTIME="$(exiftool -args -FileModifyDate ${SRCFILE})"
+    exiftool "$FMTIME" $file
+    done
+```
 # Scripts
 ## make-pan.sh
 This converts a panoramic still image, like what modern smartphones create, into a video that pans the length of the image.
@@ -70,21 +106,3 @@ For example: `make-pan.sh ../IMG_3418.JPG up 13 60 5 75`
 This creates a video that pans up a vertical panoramic image, where each frame is 13 pixels from the prior frame, and it runs at 60 frames per second. We cut off 5 frames at the beginning, because there was too much sidewalk in the pano.  And we chopped off 75 frames of empty sky at the top of the pano. This is a pretty smooth video and it moves fairly quickly. That image was actually a shot of the Space Needle in Seattle, WA. So the pan video allows us to get full width of the screen and full height of the Space Needle, for a more impressive shot on a big-screen TV.
 
 When specifying args, all but the file name are optional, but their positions are not.  If you specify an arg for `<increment>`, you must specify `<direction>` before it. If you want to specify `<cut_from_end>`, you must specify all args in the correct order.
-
-# Notes
-
-## Date / Time Stamps
-
-**When sorting files by the generic "Date" column in Windows Explorer**
-* JPG files based on Date Taken column
-    - Pulled from the EXIF tag DateTimeOriginal
-    - **localtime without TZ offset**
-* PNG based on Date Modified column
-    - Pulled from the file's FileModifyDate data
-    - **localtime with TZ offset**
-* Videos based on "Media Created" column
-    - Pulled from either of the QuickTime tags CreateDate or MediaCreateDate
-    - **UTC**
-
-So when you vacation outside of your home timezone, those pictures and videos will not sort correctly in Windows, until you set your computer clock's timezone to the same as where you went on vacation.
-
