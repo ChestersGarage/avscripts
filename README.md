@@ -52,8 +52,7 @@ So when you vacation outside of your home timezone, those pictures and videos wi
 * Copy Media Created (CreateDate or MediaCreateDate) to File Modified stamp in a directory
 	* exiftool '-FileModifyDate<MediaCreateDate' dir
 * Copy File Modified from one file to another
- ```
-    SRCEXT="JPG"
+ ```SRCEXT="JPG"
     DSTEXT="png"
     for file in $(ls -1 *.${DSTEXT})
     do
@@ -62,6 +61,7 @@ So when you vacation outside of your home timezone, those pictures and videos wi
     exiftool "$FMTIME" $file
     done
 ```
+
 # Scripts
 ## make-pan.sh
 This converts a panoramic still image, like what modern smartphones create, into a video that pans the length of the image.
