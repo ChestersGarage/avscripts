@@ -61,6 +61,14 @@ So when you vacation outside of your home timezone, those pictures and videos wi
     exiftool "$FMTIME" $file
     done
 ```
+* Copy tags from originals to edited files
+```for file in $(ls -1 GX*-1080p.MP4)
+	do
+	SRCFILE=$(basename -s '-1080p.MP4' $file).MP4
+	exiftool -tagsFromFile $SRCFILE $file
+done
+```
+
 
 # Scripts
 ## make-pan.sh
