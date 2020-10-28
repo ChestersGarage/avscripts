@@ -46,20 +46,26 @@ I recommend always running these scripts inside an empty folder, and reference y
 So when you vacation outside of your home timezone, those pictures and videos will not sort correctly in Windows, until you set your computer clock's timezone to the same as where you went on vacation.
 
 * Shift a video's time stamp to 3 hours earlier
-	* exiftool '-QuickTime:MediaCreateDate-=3' '-QuickTime:CreateDate-=3' file.mp4
+```
+exiftool '-QuickTime:MediaCreateDate-=3' '-QuickTime:CreateDate-=3' file.mp4
+```
 * Copy Date Taken (DateTimeOriginal) to File Modified stamp in a directory
-	* exiftool '-FileModifyDate<DateTimeOriginal' dir
+```
+exiftool '-FileModifyDate<DateTimeOriginal' dir
+```
 * Copy Media Created (CreateDate or MediaCreateDate) to File Modified stamp in a directory
-	* exiftool '-FileModifyDate<MediaCreateDate' dir
-* Copy File Modified from one file to another
+```
+exiftool '-FileModifyDate<MediaCreateDate' dir
+```
+* Copy File Modified from originals to edited copies
 ```
 SRCEXT="JPG"
 DSTEXT="png"
 for file in $(ls -1 *.${DSTEXT})
-do
-SRCFILE=$(basename -s .${DSTEXT} ${file}).${SRCEXT}
-FMTIME="$(exiftool -args -FileModifyDate ${SRCFILE})"
-exiftool "$FMTIME" $file
+	do
+	SRCFILE=$(basename -s .${DSTEXT} ${file}).${SRCEXT}
+	FMTIME="$(exiftool -args -FileModifyDate ${SRCFILE})"
+	exiftool "$FMTIME" $file
 done
 ```
 * Copy tags from originals to edited files
@@ -70,6 +76,38 @@ for file in $(ls -1 GX*-1080p.MP4)
 	exiftool -tagsFromFile $SRCFILE $file
 done
 ```
+
+### Convert image sequence to video
+```
+# ffmpeg: (creates CRF 0 x264 .mkv file) FULLY TESTED
+# -framerate - the frame rate of the INPUT media
+# -r - the frame rate of the OUTPUT media
+# input-csp=i422 and format=yuvj422p work together to maintain color space quality from JPGs
+# Source images are 4000x3000. Crop to 4000x2250 for 16:9
+
+# JPG image sequence (YUV 4:2:2)
+ffmpeg \
+-start_number 22527 \
+-framerate 60 \
+-i G00%05d.JPG \
+-codec:v libx264 -x264-params 'crf=15:input-csp=i422' \
+-r 60 \
+-filter:v 'crop=4000:2250:0:0,scale=1920:-1,format=yuvj422p' \
+PoolParty.mkv
+
+# PNG image sequence (RGB)
+ffmpeg \
+-start_number 00000 \
+-framerate 60 \
+-i pan%05d.png \
+-c:v libx265 -x265-params crf=15 \
+-r 60 \
+BuildingPan.mkv
+```
+
+### 
+
+
 
 # Scripts
 ## make-pan.sh
