@@ -76,15 +76,13 @@ When specifying args, all but the file name are optional, but their positions ar
 ## Date / Time Stamps
 
 **When sorting files by the generic "Date" column in Windows Explorer**
-* JPG files based on Date Taken column
+1. JPG files based on Date Taken column
 - Pulled from the EXIF tag DateTimeOriginal
 - **localtime without TZ offset**
-
-* PNG based on Date Modified column
+2. PNG based on Date Modified column
 - Pulled from the file's FileModifyDate data
 - **localtime with TZ offset**
-
-* Videos based on "Media Created" column
+3. Videos based on "Media Created" column
 - Pulled from either of the QuickTime tags CreateDate or MediaCreateDate
 - **UTC**
 
